@@ -1,5 +1,5 @@
 # ベースイメージに Go を使用
-FROM golang:1.20 AS builder
+FROM golang:1.24 AS builder
 
 # 作業ディレクトリを設定
 WORKDIR /app
@@ -14,13 +14,13 @@ RUN go mod download
 COPY . .
 
 # アプリをビルド
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/test .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/backend-api .
 
 # 実行用の軽量イメージを作成
 FROM alpine:latest
 WORKDIR /root/
-COPY --from=builder /app/test .
+COPY --from=builder /app/backend-api .
 
 EXPOSE 8081
 
-CMD ["./test"]
+CMD ["./backend-api"]

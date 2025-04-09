@@ -1,10 +1,11 @@
 
 services:
-  default_app:
-    image: minato024/echo
+  backend-api:
+    image: docker-golang-backend
     build:
       context: .
       dockerfile: Dockerfile
+    
     container_name: test-go-app
     ports:
       - "8081:8081"
