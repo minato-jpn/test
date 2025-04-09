@@ -7,6 +7,9 @@ import (
 )
 
 func main() {
+
+	//entryポイントとしてアクセスされた場合のhandlerへのルーティングを定義
+
 	e := echo.New()
 
 	// ルートエンドポイント
