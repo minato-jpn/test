@@ -1,0 +1,4 @@
+FROM postgres:15-bullseye
+
+# 起動時に自動で実行される
+COPY init/init.sql /docker-entrypoint-initdb.d/

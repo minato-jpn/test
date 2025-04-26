@@ -1,0 +1,253 @@
+openapi: 3.0.0
+info:
+  title: Project API
+  version: "1.0"
+paths:
+  /register:
+    post:
+      tags:
+        - Authorization
+      summary: 自分のアカウント情報の登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterInformation'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: "John Doe"
+        '400':
+          description: validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /login:
+    post:
+      tags:
+        - Authorization
+      summary: ログイン
+      responses:
+        '200':
+          description: success
+  /logout:
+    post:
+      tags:
+        - Authorization
+      summary: ログアウト
+      responses:
+        '200':
+          description: success
+  /my-account:
+    get:
+      tags:
+        - Users
+      summary: 自分のアカウント情報の取得
+      responses:
+        '200':
+          description: success
+          content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/UserInformation'
+
+  /project/{id}:
+    get:
+      tags:
+          - Project
+      summary: プロジェクトの取得
+      responses:
+        '200':
+          description: success
+          content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/ProjectInformation'
+    delete:
+      tags:
+          - Project
+      summary: プロジェクトの削除
+      responses:
+        '200':
+          description: success
+          content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/ProjectInformation'
+  /project/detail/{id}:
+    get:
+      tags:
+          - Project
+      summary: プロジェクトの内容の取得
+      responses:
+        '200':
+          description: success
+  /block/{id}:
+    get:
+      tags:
+          - Project
+      summary: ブロック内容の取得
+      responses:
+        '200':
+          description: success
+    post:
+      tags:
+          - Project
+      summary: ブロック内容の登録
+      responses:
+        '200':
+          description: success
+    put:
+      tags:
+          - Project
+      summary: ブロック内容の編集・更新
+      responses:
+        '200':
+          description: success
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          oneOf: 
+            - $ref: '#/components/schemas/ValidationError'
+            - $ref: '#/components/schemas/NotAllowedMethodError'
+    ValidationError:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: "Validation Error"
+    UnAuthorizeError:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: "Validation Error"
+    ForbiddenError:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 403
+        message:
+          type: string
+          example: "Forbidden Error"
+    NotFoundError:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "NotFound Error"
+    NotAllowedMethodError:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 405
+        message:
+          type: string
+          example: "Method Not Allowed"
+        method:
+          type: string
+          example: "PUT"
+        allowedMethods:
+          type: array
+          items:
+            type: string
+          example: ["GET", "POST"]
+    InternalError:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 500
+        message:
+          type: string
+          example: "Internal Error"
+    
+    ResponseWrapper:
+      type: object
+      properties:
+        data:
+          type: object
+        error:
+          type: string
+          additionalProperties: true # 任意のプロパティを許可する
+          
+    RegisterInformation: 
+      type: object
+      required:
+        - name
+        - email
+        - login_id
+        - password
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        login_id:
+          type: string
+        password:
+          type: string
+    UserInformation: 
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - profile_image_url
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        profile_image_url:
+          type: string
+    ProjectInformation: 
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
